@@ -1,0 +1,62 @@
+# manufacturer: HUMAX
+# model_number: BGW320-500
+# software_version: 6.29
+
+# scraper for various sensors
+- resource: http://192.168.1.254/cgi-bin/fiberstat.ha
+  verify_ssl: false
+  scan_interval: 23
+  sensor: 
+    - name: "Rx Power"
+      select: "#content-sub > div:nth-child(12) > h1:nth-child(1)"
+      value_template: '{{ value.split(" ")[2] }}'
+      unique_id: 'att_ont_fiber_rx_power'
+      unit_of_measurement: µW
+    - name: "Tx Power"
+      select: "#content-sub > div:nth-child(10) > h1:nth-child(1)"
+      value_template: '{{ value.split(" ")[2] }}'
+      unique_id: 'att_ont_fiber_tx_power'
+      unit_of_measurement: µW
+    - name: "Tx Bias"
+      select: "#content-sub > div:nth-child(8) > h1:nth-child(1)"
+      value_template: '{{ value.split(" ")[2] }}'
+      unique_id: 'att_ont_fiber_tx_bias'
+      unit_of_measurement: "µA * 2"
+    - name: "Vcc"
+      select: "#content-sub > div:nth-child(6) > h1:nth-child(1)"
+      value_template: '{{ value.split(" ")[1] }}'
+      unique_id: 'att_ont_fiber_vcc'
+      unit_of_measurement: "µV * 100"
+    - name: "Temperature"
+      select: " #content-sub > div:nth-child(4) > h1:nth-child(1)"
+      value_template: '{{ value.split(" ")[1] }}'
+      unique_id: 'att_ont_fiber_temperature'
+      unit_of_measurement: "C"
+    - name: "Tx Fault State"
+      select: ".table75 > tr:nth-child(17) > td:nth-child(2)"
+      unique_id: 'att_ont_fiber_tx_fault_state'
+    - name: "Rx LOS State"
+      select: ".table75 > tr:nth-child(18) > td:nth-child(2)"
+      unique_id: 'att_ont_fiber_rx_los_state'
+# AT&T gateway broadband status
+- resource: http://192.168.1.254/cgi-bin/broadbandstatistics.ha
+  verify_ssl: false
+  scan_interval: 67
+  sensor: 
+    - name: "Broadband connection state"
+      select: "#content-sub > form:nth-child(2) > div:nth-child(3) > table:nth-child(1) > tr:nth-child(3) > td:nth-child(2)"
+      unique_id: 'att_ont_broadband_conn_state'
+    - name: "PON Link Status"
+      select: "#content-sub > form:nth-child(2) > div:nth-child(14) > table:nth-child(1) > tr:nth-child(1) > td:nth-child(2)"
+      unique_id: 'att_ont_broadband_pon_link_status'
+    - name: "UNI Status"
+      select: "#content-sub > form:nth-child(2) > div:nth-child(14) > table:nth-child(1) > tr:nth-child(2) > td:nth-child(2)"
+      unique_id: 'att_ont_broadband_uni_status'
+# AT&T gateway system info
+- resource: http://192.168.1.254/cgi-bin/sysinfo.ha
+  verify_ssl: false
+  scan_interval: 3607
+  sensor: 
+    - name: "Gateway software version"
+      select: ".table75 > tr:nth-child(4) > td:nth-child(2)"
+      unique_id: 'att_ont_broadband_software_version'
